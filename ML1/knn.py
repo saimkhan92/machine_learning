@@ -93,8 +93,13 @@ class Knearest:
         # Again, the current return value is a placeholder
         # and definitely needs to be changed.
 
-        return self.majority(list(random.randrange(len(self._y)) \
-                                  for x in xrange(self._k)))
+        #return self.majority(list(random.randrange(len(self._y)) \
+        #                          for x in xrange(self._k)))
+        example_new=numpy.array(example).reshape((1,-1))
+        dist, ind = self._kdtree.query(example_new, k=self._k)
+        majority_label=self.majority(ind[0].reshape(len(ind[0])).tolist())
+        return majority_label
+
 
     def confusion_matrix(self, test_x, test_y):
         """
@@ -110,7 +115,7 @@ class Knearest:
         # Finish this function to build a dictionary with the
         # mislabeled examples.  You'll need to call the classify
         # function for each example.
-
+        """
         d = defaultdict(dict)
         data_index = 0
         for xx, yy in zip(test_x, test_y):
@@ -118,6 +123,14 @@ class Knearest:
             if data_index % 100 == 0:
                 print("%i/%i for confusion matrix" % (data_index, len(test_x)))
         return d
+        """
+        dic={0:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},1:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},2:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},3:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},4:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},5:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},6:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},7:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},8:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},9:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0}}
+
+        for i in range(0,len(test_x)):
+            real_label=test_y[i]
+            calculated_label=int(self.classify(test_x[i]))
+            dic[real_label][calculated_label]=dic[real_label][calculated_label]+1
+        return dic
 
     @staticmethod
     def accuracy(confusion_matrix):
@@ -158,8 +171,7 @@ if __name__ == "__main__":
     else:
         knn = Knearest(data.train_x, data.train_y, args.k)
     print("Done loading data")
-    print(knn.majority([39,49,59]))
-"""
+    #print(knn.majority([39,49,59]))
     confusion = knn.confusion_matrix(data.test_x, data.test_y)
     print("\t" + "\t".join(str(x) for x in xrange(10)))
     print("".join(["-"] * 90))
@@ -167,4 +179,3 @@ if __name__ == "__main__":
         print("%i:\t" % ii + "\t".join(str(confusion[ii].get(x, 0))
                                        for x in xrange(10)))
     print("Accuracy: %f" % knn.accuracy(confusion))
-"""
