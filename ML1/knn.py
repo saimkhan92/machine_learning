@@ -12,8 +12,6 @@ class Numbers:
     """
 
     def __init__(self, location):
-        # You shouldn't have to modify this class, but you can if
-        # you'd like.
 
         import cPickle, gzip
 
@@ -24,7 +22,6 @@ class Numbers:
         self.train_x, self.train_y = train_set
         self.test_x, self.test_y = valid_set
         f.close()
-
 
 class Knearest:
     """
@@ -39,30 +36,21 @@ class Knearest:
         :param y: Training data output
         :param k: The number of nearest points to consider in classification
         """
-
-        # You can modify the constructor, but you shouldn't need to.
-        # Do not use another data structure from anywhere else to
-        # complete the assignment.
-
+        
         self._kdtree = BallTree(x)
         self._y = y
         self._k = k
 
     def majority(self, item_indices):
         """
-        Given the indices of training examples, return the majority label.  If
-        there's a tie, return the median of the majority labels (as implemented
+        Given the indices of training examples, returns the majority label.  If
+        there's a tie, returns the median of the majority labels (as implemented
         in numpy).
 
         :param item_indices: The indices of the k nearest neighbors
         """
         assert len(item_indices) == self._k, "Did not get k inputs"
 
-        # Finish this function to return the most common y label for
-        # the given indices.  The current return value is a placeholder
-        # and definitely needs to be changed.
-        #
-        # http://docs.scipy.org/doc/numpy/reference/generated/numpy.median.html
         l1=[]
         dic={}
         count=1
@@ -87,14 +75,6 @@ class Knearest:
         :param example: A representation of an example in the same
         format as training data
         """
-
-        # Finish this function to find the k closest points, query the
-        # majority function, and return the predicted label.
-        # Again, the current return value is a placeholder
-        # and definitely needs to be changed.
-
-        #return self.majority(list(random.randrange(len(self._y)) \
-        #                          for x in xrange(self._k)))
         example_new=numpy.array(example).reshape((1,-1))
         dist, ind = self._kdtree.query(example_new, k=self._k)
         majority_label=self.majority(ind[0].reshape(len(ind[0])).tolist())
@@ -104,7 +84,7 @@ class Knearest:
     def confusion_matrix(self, test_x, test_y):
         """
         Given a matrix of test examples and labels, compute the confusion
-        matrix for the current classifier.  Should return a dictionary of
+        matrix for the current classifier. Return a dictionary of
         dictionaries where d[ii][jj] is the number of times an example
         with true label ii was labeled as jj.
 
@@ -112,18 +92,6 @@ class Knearest:
         :param test_y: Test data answers
         """
 
-        # Finish this function to build a dictionary with the
-        # mislabeled examples.  You'll need to call the classify
-        # function for each example.
-        """
-        d = defaultdict(dict)
-        data_index = 0
-        for xx, yy in zip(test_x, test_y):
-            data_index += 1
-            if data_index % 100 == 0:
-                print("%i/%i for confusion matrix" % (data_index, len(test_x)))
-        return d
-        """
         dic={0:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},1:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},2:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},3:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},4:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},5:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},6:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},7:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},8:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},9:{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0}}
 
         for i in range(0,len(test_x)):
@@ -135,11 +103,8 @@ class Knearest:
     @staticmethod
     def accuracy(confusion_matrix):
         """
-        Given a confusion matrix, compute the accuracy of the underlying classifier.
+        Given a confusion matrix, computes the accuracy of the underlying classifier.
         """
-
-        # You do not need to modify this function
-
         total = 0
         correct = 0
         for ii in confusion_matrix:
@@ -161,8 +126,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     data = Numbers("../data/mnist.pkl.gz")
-
-    # You should not have to modify any of this code
 
     if args.limit > 0:
         print("Data limit: %i" % args.limit)
